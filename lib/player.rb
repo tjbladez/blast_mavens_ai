@@ -12,18 +12,22 @@ class Player
                           :right => Gosu::Image.load_tiles(Processor.game_window, "resources/images/player_right#{@index}.png", @t_size, @t_size, false)}
     @bombs        = []
     @explosions   = []
-    @move_control = {[Gosu::Button::KbA,       Gosu::Button::KbLeft] => [:left, [-1, 0],[0, 0, 0, 40]],
-                    [Gosu::Button::KbD,        Gosu::Button::KbRight] => [:right, [1, 0], [40, 0, 40, 40]],
-                    [Gosu::Button::KbW,        Gosu::Button::KbUp   ] => [:up, [0, -1],[40, 0, 0, 0]],
-                    [Gosu::Button::KbS,        Gosu::Button::KbDown ] => [:down, [0, 1],[40, 40, 0, 40 ]]}
+    @keyboard_ctl = {[Gosu::Button::KbA,       Gosu::Button::KbLeft] => :left,
+                    [Gosu::Button::KbD,        Gosu::Button::KbRight] => :right,
+                    [Gosu::Button::KbW,        Gosu::Button::KbUp   ] => :up,
+                    [Gosu::Button::KbS,        Gosu::Button::KbDown ] => :down}
+    @movement_ctl = { :left  => [[-1, 0], [0, 0, 0, 40]],
+                      :right => [[1, 0], [40, 0, 40, 40]],
+                      :up    => [[0, -1], [40, 0, 0, 0]],
+                      :down  => [[0, 1], [40, 40, 0, 40 ]]}
     @bomb_control = [Gosu::Button::KbSpace,    Gosu::Button::KbRightAlt]
     @img_counter  = 0
     @img_index    = 4
 
     @x = @y = [@t_size * 1 + 1, @t_size * 14 + 1][@index]
-    # if @index == 1
-      # @brain = BasicBrain.new(self, Processor.players[0])
-    # end
+    if @index == 1
+      @brain = BasicBrain.new(self, Processor.players[0])
+    end
   end
 
   def draw
@@ -43,12 +47,13 @@ class Player
 
 private
   def movement!
-    @img_counter += 1
-    move_instruct = @brain ? @brain.move_instructions : input_move_instructions
-    if move_instruct
+    @img_counter  += 1
+    move_direction = @brain ? @brain.move : input_move
+    move_instruct  = @movement_ctl[move_direction]
+    if move_direction
       @img_index = 0 unless (0..2).include?(@img_index)
       @img_index += 1 if @img_counter % 5 == 0
-      x_y = move_instruct[1]
+      x_y = move_instruct.first
       inc_x, inc_y = x_y
       tar_x1, tar_y1, tar_x2, tar_y2 = *move_instruct.last
       4.times do |i|#speed
@@ -56,7 +61,7 @@ private
           update_bomb_solidness
           @x += inc_x
           @y += inc_y
-          @facing = move_instruct[0]
+          @facing = move_direction
         end
       end
     else
@@ -65,7 +70,7 @@ private
   end
 
   def bombs!
-    if placing_bomb? && !@bombs.detect {|bomb| bomb.at?(center_x, center_y)}
+    if bomb? && !@bombs.detect {|bomb| bomb.at?(center_x, center_y)}
       @bombs << Bomb.new(center_x, center_y)
     end
     check_bomb_existance
@@ -121,12 +126,12 @@ private
     end
   end
 
-  def input_move_instructions
-    move = @move_control.detect {|keys, movement| Processor.game_window.button_down?(keys[@index]) }
+  def input_move
+    move = @keyboard_ctl.detect {|keys, movement| Processor.game_window.button_down?(keys[@index]) }
     move.last if move
   end
 
-  def placing_bomb?
-    @brain ? @brain.placing_bomb? : Processor.game_window.button_down?(@bomb_control[@index])
+  def bomb?
+    @brain ? @brain.bomb? : Processor.game_window.button_down?(@bomb_control[@index])
   end
 end

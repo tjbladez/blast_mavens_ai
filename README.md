@@ -1,18 +1,11 @@
-# Blast Mavens Multiplayer Beta #
+# Blast Mavens AI Competition #
 
-Blast Mavens Multiplayer is 2D game written in ruby using [Gosu libruary](http://github.com/jlnr/gosu) inspired by the [bomberman](http://en.wikipedia.org/wiki/Bomberman).
+Placeholder for work for Blast Mavens AI Competition. Blast Mavens is 2D game written in ruby using [Gosu libruary](http://github.com/jlnr/gosu) inspired by the [bomberman](http://en.wikipedia.org/wiki/Bomberman). Blast Maven will be used to make 2 AI's compete against each other
 
 ## Installation ##
 
-Install it from the gem:
-         gem install blast_mavens_multiplayer
-
-Run it via:
-				 blast_mavens_multiplayer
-
--OR-
-
-Alternatively you can check out the code from this repository and run game.rb.
+You can check out the code from this repository and run game.rb.
+In player.rb substitute BasicBrain for AI of your choice (written by you)
 
 ## Controls ##
 
@@ -26,21 +19,16 @@ Until help hints will be implemented in-game, until options will be implemented 
 * **S** Player 1 down
 * **D** Player 1 right
 * **Space** Player 1 place dynamite
-* **UP** Player 2 up
-* **LEFT** Player 2 left
-* **DOWN** Player 2 down
-* **RIGHT** Player 2 right
-* **RIGHTSHIFT** Player 2 place dynamite
 
-## Purpose ##
+## AI Example ##
 
-This game (repository) will serve as a base for the open AI competition as well as different single player AI scripts. For repo, api and documentation as
-well as examples of the AI scripts could be found [here]().
+Look at basic_brain.rb for basic example for AI script.
 
 ## Notes ##
 
 All art, functionality are subject to change. Tons of features yet to be implemented.
-You can change map by modifying basic.txt under maps with any editor.
+You can change map by modifying basic.txt under maps with any editor. Also open.txt map provided so you can figure out our scripts before
+introducing column collision detection
 
 ## Copyright ##
 
