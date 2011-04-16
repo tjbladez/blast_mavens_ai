@@ -1,8 +1,8 @@
 class Player
 
   attr_reader :bombs, :explosions, :x, :y, :index
-  def initialize
-    @index        = Processor.has_at_least_one_player? ? 1 : 0
+  def initialize(player_number, brain_class)
+    @index        = player_number
     @t_size       = Processor::TileSize
     #more animation to come
     @facing       = :down
@@ -12,22 +12,15 @@ class Player
                           :right => Gosu::Image.load_tiles(Processor.game_window, "resources/images/player_right#{@index}.png", @t_size, @t_size, false)}
     @bombs        = []
     @explosions   = []
-    @keyboard_ctl = {[Gosu::Button::KbA,       Gosu::Button::KbLeft] => :left,
-                    [Gosu::Button::KbD,        Gosu::Button::KbRight] => :right,
-                    [Gosu::Button::KbW,        Gosu::Button::KbUp   ] => :up,
-                    [Gosu::Button::KbS,        Gosu::Button::KbDown ] => :down}
     @movement_ctl = { :left  => [[-1, 0], [0, 0, 0, 40]],
                       :right => [[1, 0], [40, 0, 40, 40]],
                       :up    => [[0, -1], [40, 0, 0, 0]],
                       :down  => [[0, 1], [40, 40, 0, 40 ]]}
-    @bomb_control = [Gosu::Button::KbSpace,    Gosu::Button::KbRightAlt]
     @img_counter  = 0
     @img_index    = 4
 
     @x = @y = [@t_size * 1 + 1, @t_size * 14 + 1][@index]
-    if @index == 1
-      @brain = BasicBrain.new(self, Processor.players[0])
-    end
+    @brain = brain_class.new(self)
   end
 
   def draw
@@ -48,7 +41,7 @@ class Player
 private
   def movement!
     @img_counter  += 1
-    move_direction = @brain ? @brain.move : input_move
+    move_direction = @brain.move
     move_instruct  = @movement_ctl[move_direction]
     if move_direction
       @img_index = 0 unless (0..2).include?(@img_index)
@@ -126,12 +119,7 @@ private
     end
   end
 
-  def input_move
-    move = @keyboard_ctl.detect {|keys, movement| Processor.game_window.button_down?(keys[@index]) }
-    move.last if move
-  end
-
   def bomb?
-    @brain ? @brain.bomb? : Processor.game_window.button_down?(@bomb_control[@index])
+    @brain.bomb?
   end
 end

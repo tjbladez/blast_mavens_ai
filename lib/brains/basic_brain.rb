@@ -1,10 +1,10 @@
 class BasicBrain
-  def initialize(brainholder, enemy)
-    @me  = brainholder
-    @you = enemy
+  def initialize(player)
+    @me  = player
   end
 
   def move
+    @you ||= Processor.players.detect{|player|player!=@me}
     x_diff = @me.x - @you.x
     y_diff = @me.y - @you.y
 
