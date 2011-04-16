@@ -1,4 +1,4 @@
-class BasicBrain
+class BasicBrain < BrainBase
   def initialize(player)
     @me  = player
   end

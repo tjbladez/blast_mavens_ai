@@ -1,4 +1,5 @@
-class KeyboardBrainTwo < KeyboardBrain
+class KeyboardBrainTwo < BrainBase
+  include KeyboardBrain
   def initialize(player)
     @movement_keys = {
       Gosu::Button::KbLeft  => :left,

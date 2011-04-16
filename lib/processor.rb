@@ -1,4 +1,3 @@
-require 'game_class'
 require 'tileable'
 require 'solid_tile'
 require 'menu_window'
@@ -8,6 +7,7 @@ require 'explosion'
 require 'bomb'
 require 'player'
 require 'game_over_window'
+require 'brain_base'
 
 # Processor is responsible to keep overall configuration knowledge, state
 # transitions and keeping track of windows
