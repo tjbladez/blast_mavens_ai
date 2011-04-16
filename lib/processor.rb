@@ -6,8 +6,9 @@ require 'map'
 require 'explosion'
 require 'bomb'
 require 'player'
-require 'basic_brain'
 require 'game_over_window'
+require 'brain_base'
+
 # Processor is responsible to keep overall configuration knowledge, state
 # transitions and keeping track of windows
 class Processor
@@ -48,7 +49,8 @@ class Processor
 
     def start_game
       @game_window = GameWindow.new
-      2.times { @players << Player.new }
+      @players << Player.new(0,KeyboardBrainOne)
+      @players << Player.new(1,BasicBrain)
       @game_window.show
     end
 
@@ -63,3 +65,4 @@ class Processor
     end
   end
 end
+Dir.glob('lib/brains/*.rb').each{|file| require file}
