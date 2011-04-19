@@ -1,13 +1,12 @@
 require 'tileable'
 require 'solid_tile'
-require 'menu_window'
-require 'game_window'
+require 'window'
 require 'map'
 require 'explosion'
 require 'bomb'
 require 'player'
-require 'game_over_window'
 require 'brain_base'
+Dir.glob('lib/windows/*.rb').each{|file| require file}
 
 # Processor is responsible to keep overall configuration knowledge, state
 # transitions and keeping track of windows
@@ -15,12 +14,13 @@ class Processor
   Screen = [1024, 768, false]
   TileSize = 48
   class << self
-    attr_reader :game_window
+    attr_reader :window
     attr_accessor :players
 
     def new
       @players = []
-      MenuWindow.new.show
+      @window = Window.new("Menu")
+      @window.show
     end
 
     def has_at_least_one_player?
@@ -48,14 +48,21 @@ class Processor
     end
 
     def start_game
-      @game_window = GameWindow.new
       @players << Player.new(0,KeyboardBrainOne)
       @players << Player.new(1,BasicBrain)
-      @game_window.show
+      @window.set_delegate("Game")
     end
 
     def game_over(death_toll)
-      GameOverWindow.new(death_toll).show
+      @window.set_delegate("GameOver", death_toll)
+    end
+
+    def close
+      @window.close
+    end
+
+    def solid_at?(x,y)
+      @window.map ? @window.map.solid_at?(x,y) : false
     end
 
   private
@@ -65,4 +72,5 @@ class Processor
     end
   end
 end
+
 Dir.glob('lib/brains/*.rb').each{|file| require file}

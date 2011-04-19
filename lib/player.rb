@@ -6,10 +6,10 @@ class Player
     @t_size       = Processor::TileSize
     #more animation to come
     @facing       = :down
-    @animation_sprites = {:left  => Gosu::Image.load_tiles(Processor.game_window, "resources/images/player_left#{@index}.png", @t_size, @t_size, false),
-                          :down  => Gosu::Image.load_tiles(Processor.game_window, "resources/images/player_down#{@index}.png", @t_size, @t_size, false),
-                          :up    => Gosu::Image.load_tiles(Processor.game_window, "resources/images/player_up#{@index}.png", @t_size, @t_size, false),
-                          :right => Gosu::Image.load_tiles(Processor.game_window, "resources/images/player_right#{@index}.png", @t_size, @t_size, false)}
+    @animation_sprites = {:left  => Gosu::Image.load_tiles(Processor.window, "resources/images/player_left#{@index}.png", @t_size, @t_size, false),
+                          :down  => Gosu::Image.load_tiles(Processor.window, "resources/images/player_down#{@index}.png", @t_size, @t_size, false),
+                          :up    => Gosu::Image.load_tiles(Processor.window, "resources/images/player_up#{@index}.png", @t_size, @t_size, false),
+                          :right => Gosu::Image.load_tiles(Processor.window, "resources/images/player_right#{@index}.png", @t_size, @t_size, false)}
     @bombs        = []
     @explosions   = []
     @movement_ctl = { :left  => [[-1, 0], [0, 0, 0, 40]],
@@ -36,6 +36,10 @@ class Player
     target_x = @x+target[0]+target[2]
     target_y = @y+target[1]+target[3]
     !solid_at?(target_x, target_y) && !Processor.all_bombs.detect{|bomb| bomb.solid_at?(target_x, target_y)}
+  end
+
+  def solid_at?(x, y)
+    Processor.solid_at?(x, y)
   end
 
 private
@@ -93,10 +97,6 @@ private
 
   def center_y
     @y + 24
-  end
-
-  def solid_at?(x, y)
-    Processor.game_window.map.solid_at?(x, y)
   end
 
   def explode_direction(x,y, direction)

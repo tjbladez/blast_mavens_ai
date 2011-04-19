@@ -1,16 +1,11 @@
-class GameWindow < Gosu::Window
-  def initialize
-    super(*Processor::Screen)
-    self.caption = "Blast Mavens: Multiplayer Beta v0.1.0"
+class Game
+  def initialize(window, opts={})
+    @window      = window
     @players_hit = {:player_0 => [], :player_1 => []}
     @finish_game = false
-    @song        = Gosu::Song.new(self, 'resources/sounds/battle.mp3')
+    @song        = Gosu::Song.new(@window, 'resources/sounds/battle.mp3')
     @song.volume = 0.3
     @song.play(true)
-  end
-
-  def map
-    @map ||= Map.new('resources/maps/basic.txt')
   end
 
   def draw
@@ -36,17 +31,20 @@ class GameWindow < Gosu::Window
     if @finish_game && Processor.players.map(&:explosions).flatten.empty?
       @song.stop
       Processor.game_over(@players_hit)
-      close
     end
   end
 
-private
+  def map
+    @map ||= Map.new('resources/maps/basic.txt')
+  end
+
   def button_down(id)
-    close               if id == Gosu::KbEscape
+    Processor.close     if id == Gosu::KbEscape
     @song.volume -= 0.1 if id == Gosu::KbNumpadSubtract
     @song.volume += 0.1 if id == Gosu::KbNumpadAdd
   end
 
+private
   def players_hit?(explosion, index)
     Processor.players.each do |player|
       if explosion.at?(player.x, player.y)
