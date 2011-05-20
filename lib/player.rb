@@ -32,32 +32,32 @@ class Player
     bombs!
   end
 
-  def no_collision?(target)
-    target_x = @x+target[0]+target[2]
-    target_y = @y+target[1]+target[3]
-    !solid_at?(target_x, target_y) && !Processor.all_bombs.detect{|bomb| bomb.solid_at?(target_x, target_y)}
+  def not_solid_at?(x, y)
+    !Processor.solid_at?(x, y) && !Processor.all_bombs.detect{|bomb| bomb.solid_at?(x, y)}
   end
 
-  def solid_at?(x, y)
-    Processor.solid_at?(x, y)
+  # projecting coordinates where player end up if decised to move given direction
+  #FIXME: fix out balanced speed, move gap etc
+  def no_collision?(direction)
+    target_x1 = @x + @movement_ctl[direction].first[0] + @movement_ctl[direction].last[0]
+    target_x2 = @x + @movement_ctl[direction].first[0] + @movement_ctl[direction].last[2]
+    target_y1 = @y + @movement_ctl[direction].first[1] + @movement_ctl[direction].last[1]
+    target_y2 = @y + @movement_ctl[direction].first[1] + @movement_ctl[direction].last[3]
+    not_solid_at?(target_x1, target_y1) && not_solid_at?(target_x2, target_y2)
   end
 
 private
   def movement!
     @img_counter  += 1
     move_direction = @brain.move
-    move_instruct  = @movement_ctl[move_direction]
     if move_direction
       @img_index = 0 unless (0..2).include?(@img_index)
       @img_index += 1 if @img_counter % 5 == 0
-      x_y = move_instruct.first
-      inc_x, inc_y = x_y
-      tar_x1, tar_y1, tar_x2, tar_y2 = *move_instruct.last
       4.times do |i|#speed
-        if no_collision?(x_y + [tar_x1, tar_y1]) && no_collision?(x_y + [tar_x2, tar_y2])
+        if no_collision?(move_direction)
           update_bomb_solidness
-          @x += inc_x
-          @y += inc_y
+          @x += @movement_ctl[move_direction].first[0]
+          @y += @movement_ctl[move_direction].first[1]
           @facing = move_direction
         end
       end
@@ -108,7 +108,7 @@ private
       when :up    then new_x, new_y = x, y - inc
       end
 
-      break if solid_at?(new_x, new_y)
+      break if Processor.solid_at?(new_x, new_y)
       @explosions << Explosion.new(new_x, new_y)
     end
   end
