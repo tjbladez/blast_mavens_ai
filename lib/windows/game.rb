@@ -3,7 +3,7 @@ class Game
     @window      = window
     @players_hit = {:player_0 => [], :player_1 => []}
     @finish_game = false
-    @song        = Gosu::Song.new(@window, 'resources/sounds/battle.mp3')
+    @song        = Gosu::Song.new(@window, BLAST_SND_PATH + 'battle.mp3')
     @song.volume = 0.3
     @song.play(true)
   end
@@ -35,7 +35,7 @@ class Game
   end
 
   def map
-    @map ||= Map.new('resources/maps/basic.txt')
+    @map ||= Map.new(BLAST_MAP_PATH + 'basic.txt')
   end
 
   def button_down(id)

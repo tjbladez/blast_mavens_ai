@@ -1,13 +1,13 @@
 class Menu
   def initialize(window, opts={})
     @window     = window
-    @pointer    = Gosu::Image.new(@window,"resources/images/cursor.png",true)
-    @background = Gosu::Image.load_tiles(@window, 'resources/images/menu.png', 1024, 768, true).first
-    @title      = Gosu::Image.load_tiles(@window, 'resources/images/title.png', 350, 80, true)
-    @new_game   = Gosu::Image.load_tiles(@window, 'resources/images/newgame.png', 150, 40, true)
-    @options    = Gosu::Image.load_tiles(@window, 'resources/images/options.png', 150, 40, true)
-    @exit_game  = Gosu::Image.load_tiles(@window, 'resources/images/exitgame.png', 150, 40, true)
-    @song       = Gosu::Song.new(@window, 'resources/sounds/menu.wav')
+    @pointer    = Gosu::Image.new(@window,BLAST_IMG_PATH + "cursor.png",true)
+    @background = Gosu::Image.load_tiles(@window, BLAST_IMG_PATH + 'menu.png', 1024, 768, true).first
+    @title      = Gosu::Image.load_tiles(@window, BLAST_IMG_PATH + 'title.png', 350, 80, true)
+    @new_game   = Gosu::Image.load_tiles(@window, BLAST_IMG_PATH + 'newgame.png', 150, 40, true)
+    @options    = Gosu::Image.load_tiles(@window, BLAST_IMG_PATH + 'options.png', 150, 40, true)
+    @exit_game  = Gosu::Image.load_tiles(@window, BLAST_IMG_PATH + 'exitgame.png', 150, 40, true)
+    @song       = Gosu::Song.new(@window, BLAST_SND_PATH + 'menu.wav')
     @new_game_index = @options_index = @exit_game_index = 1
     @song.play(true)
     @song.volume = 0.3

@@ -6,8 +6,8 @@ require 'explosion'
 require 'bomb'
 require 'player'
 require 'brain_base'
-Dir.glob('lib/windows/*.rb').each{|file| require file}
-
+Dir.glob(BLAST_LIB_ROOT + 'windows/*.rb').each{|file| require file}
+Dir.glob(BLAST_LIB_ROOT + 'brains/*.rb').each{|file| require file}
 # Processor is responsible to keep overall configuration knowledge, state
 # transitions and keeping track of windows
 class Processor
@@ -49,7 +49,7 @@ class Processor
 
     def start_game
       @players << Player.new(0,KeyboardBrainOne)
-      @players << Player.new(1,BasicBrain)
+      @players << Player.new(1,KamikadzeBrain)
       @window.set_delegate("Game")
     end
 
@@ -73,4 +73,3 @@ class Processor
   end
 end
 
-Dir.glob('lib/brains/*.rb').each{|file| require file}
